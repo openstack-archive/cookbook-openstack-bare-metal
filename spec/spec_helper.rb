@@ -20,3 +20,20 @@ UBUNTU_OPTS = {
   version: '14.04',
   log_level: ::LOG_LEVEL
 }
+
+shared_context 'bare-metal-stubs' do
+  before do
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
+      .with('service', anything)
+      .and_return('')
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
+      .with('db', anything)
+      .and_return('')
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
+      .with('user', anything)
+      .and_return('')
+    allow_any_instance_of(Chef::Recipe).to receive(:get_secret)
+      .with('openstack_identity_bootstrap_token')
+      .and_return('bootstrap-token')
+  end
+end
