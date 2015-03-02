@@ -40,16 +40,11 @@ describe 'openstack-bare-metal::ironic-common' do
       let(:dir) { chef_run.directory('/etc/ironic') }
 
       it 'should create the directory' do
-        expect(chef_run).to create_directory(dir.name)
-      end
-
-      it 'has proper owner' do
-        expect(dir.owner).to eq('ironic')
-        expect(dir.group).to eq('ironic')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', dir.mode)).to eq('750')
+        expect(chef_run).to create_directory(dir.name).with(
+          user: 'ironic',
+          group: 'ironic',
+          mode: 0750
+        )
       end
     end
 
@@ -57,16 +52,11 @@ describe 'openstack-bare-metal::ironic-common' do
       let(:file) { chef_run.template('/etc/ironic/ironic.conf') }
 
       it 'should create the ironic.conf template' do
-        expect(chef_run).to create_template(file.name)
-      end
-
-      it 'has proper owner' do
-        expect(file.owner).to eq('ironic')
-        expect(file.group).to eq('ironic')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', file.mode)).to eq('640')
+        expect(chef_run).to create_template(file.name).with(
+          user: 'ironic',
+          group: 'ironic',
+          mode: 0640
+        )
       end
     end
 
@@ -74,16 +64,11 @@ describe 'openstack-bare-metal::ironic-common' do
       let(:file) { chef_run.template('/etc/ironic/rootwrap.conf') }
 
       it 'should create the /etc/ironic/rootwrap.conf file' do
-        expect(chef_run).to create_template(file.name)
-      end
-
-      it 'has proper owner' do
-        expect(file.owner).to eq('root')
-        expect(file.group).to eq('root')
-      end
-
-      it 'has proper modes' do
-        expect(sprintf('%o', file.mode)).to eq('644')
+        expect(chef_run).to create_template(file.name).with(
+          user: 'root',
+          group: 'root',
+          mode: 0644
+        )
       end
 
       context 'template contents' do
