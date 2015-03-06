@@ -17,16 +17,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-class ::Chef::Recipe # rubocop:disable Documentation
-  include ::Openstack
-end
-
-# TODO(wenchma) A temporary workaround to ironic database with user instead of openstack-ops-database.
-# These could be removed and replaced by the following patch once Kilo branch is created.
-# https://review.openstack.org/#/c/148463/
-db_create_with_user(
-  'bare-metal',
-  node['openstack']['db']['bare-metal']['username'],
-  get_password('db', 'ironic')
-)
