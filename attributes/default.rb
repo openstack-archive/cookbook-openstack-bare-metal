@@ -76,6 +76,6 @@ when 'debian'
     'ironic_api_service' => 'ironic-api',
     'ironic_conductor_packages' => ['ironic-conductor'],
     'ironic_conductor_service' => 'ironic-conductor',
-    'ironic_common_packages' => ['python-ironicclient']
+    'ironic_common_packages' => ['python-ironicclient', 'ironic-common']
   }
 end

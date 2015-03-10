@@ -28,8 +28,9 @@ describe 'openstack-bare-metal::ironic-common' do
 
     include_context 'bare-metal-stubs'
 
-    it 'upgrades ironic client packages' do
+    it 'upgrades ironic common packages' do
       expect(chef_run).to upgrade_package('python-ironicclient')
+      expect(chef_run).to upgrade_package('ironic-common')
     end
 
     it 'upgrades mysql python package' do
