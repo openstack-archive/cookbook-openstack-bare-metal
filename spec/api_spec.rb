@@ -44,6 +44,14 @@ describe 'openstack-bare-metal::api' do
       end
     end
 
+    it 'should create the directory /var/cache/ironic' do
+      expect(chef_run).to create_directory('/var/cache/ironic').with(
+        user: 'ironic',
+        group: 'ironic',
+        mode: 00700
+      )
+    end
+
     it 'enables ironic api on boot' do
       expect(chef_run).to enable_service('ironic-api')
     end
@@ -61,7 +69,7 @@ describe 'openstack-bare-metal::api' do
     end
 
     it 'runs db migrations' do
-      expect(chef_run).to run_execute('ironic db sync').with(user: 'ironic', group: 'ironic')
+      expect(chef_run).to run_execute('ironic db sync').with(user: 'root', group: 'root')
     end
   end
 end

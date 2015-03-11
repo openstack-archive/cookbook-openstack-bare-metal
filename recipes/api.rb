@@ -34,6 +34,13 @@ platform_options['ironic_api_packages'].each do |pkg|
   end
 end
 
+directory '/var/cache/ironic' do
+  owner node['openstack']['bare-metal']['user']
+  group node['openstack']['bare-metal']['group']
+  mode 00700
+  action :create
+end
+
 service 'ironic-api' do
   service_name platform_options['ironic_api_service']
   supports status: true, restart: true
@@ -48,8 +55,8 @@ service 'ironic-api' do
 end
 
 execute 'ironic db sync' do
-  command 'ironic-dbsync --config-file /etc/ironic/ironic.conf create_schema'
-  user node['openstack']['bare-metal']['user']
-  group node['openstack']['bare-metal']['group']
+  command 'ironic-dbsync --config-file /etc/ironic/ironic.conf upgrade'
+  user 'root'
+  group 'root'
   action :run
 end

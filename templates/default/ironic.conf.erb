@@ -943,12 +943,17 @@ auth_protocol=<%= @identity_admin_endpoint.scheme %>
 # Complete public Identity API endpoint. (string value)
 auth_uri=<%= @auth_uri %>
 
+# Complete admin Identity API endpoint. This should specify
+# the unversioned root endpoint e.g. https://localhost:3537/
+# (string value)
+identity_uri=<%= @identity_admin_endpoint.scheme %>://<%= @identity_admin_endpoint.host %>:<%= @identity_admin_endpoint.port %>
+
 # API version of the admin Identity API endpoint. (string
 # value)
 auth_version=<%= node['openstack']['bare-metal']['api']['auth']['version'] %>
 
 # Keystone account username (string value)
-admin_user = <%= node['openstack']['block-storage']['service_user'] %>
+admin_user = <%= node['openstack']['bare-metal']['service_user'] %>
 
 # Keystone account password (string value)
 admin_password = <%= @service_pass %>

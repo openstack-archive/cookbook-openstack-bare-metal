@@ -32,6 +32,15 @@ default['openstack']['bare-metal']['debug'] = 'false'
 default['openstack']['bare-metal']['rpc_thread_pool_size'] = 64
 default['openstack']['bare-metal']['rpc_conn_pool_size'] = 30
 default['openstack']['bare-metal']['rpc_response_timeout'] = 60
+case node['openstack']['mq']['service_type']
+when 'rabbitmq'
+  default['openstack']['bare-metal']['rpc_backend'] = 'rabbit'
+when 'qpid'
+  default['openstack']['bare-metal']['rpc_backend'] = 'qpid'
+end
+
+# The AMQP exchange to connect to if using RabbitMQ or Qpid
+default['openstack']['bare-metal']['control_exchange'] =  node['openstack']['mq']['bare-metal']['control_exchange']
 
 # Logging stuff
 default['openstack']['bare-metal']['log_dir'] = '/var/log/ironic'
@@ -46,6 +55,12 @@ default['openstack']['bare-metal']['region'] = node['openstack']['region']
 default['openstack']['bare-metal']['api']['auth_strategy'] = 'keystone'
 
 default['openstack']['bare-metal']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
+
+# Whether to allow the client to perform insecure SSL (https) requests
+default['openstack']['bare-metal']['api']['auth']['insecure'] = false
+
+# Keystone PKI signing directories
+default['openstack']['bare-metal']['api']['auth']['cache_dir'] = '/var/cache/ironic/api'
 
 default['openstack']['bare-metal']['service_tenant_name'] = 'service'
 default['openstack']['bare-metal']['service_user'] = 'ironic'

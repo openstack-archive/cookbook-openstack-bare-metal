@@ -59,6 +59,29 @@ describe 'openstack-bare-metal::ironic-common' do
           mode: 0640
         )
       end
+
+      context 'template contents' do
+        it 'has the default rpc_backend attribute' do
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('DEFAULT', /^rpc_backend=rabbit$/)
+        end
+
+        it 'overrides the default rpc_backend attribute' do
+          node.set['openstack']['bare-metal']['rpc_backend'] = 'qpid'
+
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('DEFAULT', /^rpc_backend=qpid$/)
+        end
+
+        it 'sets the default auth attributes' do
+          [
+            /^insecure=false$/,
+            %r(^signing_dir=/var/cache/ironic/api$)
+          ].each do |line|
+            expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', line)
+          end
+        end
+      end
     end
 
     describe 'rootwrap.conf' do
