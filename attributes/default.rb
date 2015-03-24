@@ -64,7 +64,7 @@ default['openstack']['bare-metal']['api']['auth']['cache_dir'] = '/var/cache/iro
 
 default['openstack']['bare-metal']['service_tenant_name'] = 'service'
 default['openstack']['bare-metal']['service_user'] = 'ironic'
-default['openstack']['bare-metal']['service_role'] = 'admin'
+default['openstack']['bare-metal']['service_role'] = 'service'
 
 default['openstack']['bare-metal']['user'] = 'ironic'
 default['openstack']['bare-metal']['group'] = 'ironic'
