@@ -82,6 +82,23 @@ describe 'openstack-bare-metal::ironic-common' do
           end
         end
       end
+
+      context 'rabbit mq backend' do
+        before do
+          node.set['openstack']['mq']['bare-metal']['service_type'] = 'rabbitmq'
+        end
+
+        it 'does not have kombu ssl version set' do
+          expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+        end
+
+        it 'sets kombu ssl version' do
+          node.set['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] = true
+          node.set['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] = 'TLSv1.2'
+
+          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+        end
+      end
     end
 
     describe 'rootwrap.conf' do

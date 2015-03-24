@@ -17,6 +17,10 @@ amqp_auto_delete=<%= node['openstack']['mq']['bare-metal']['auto_delete'] %>
 rpc_conn_pool_size=<%= node['openstack']['bare-metal']['rpc_conn_pool_size'] %>
 
 <% if @mq_service_type == 'rabbitmq'  %>
+<% if node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] && node['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] %>
+kombu_ssl_version=<%= node['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] %>
+<% end -%>
+
 ##### RABBITMQ #####
 # The RabbitMQ userid. (string value)
 rabbit_userid=<%= node['openstack']['mq']['bare-metal']['rabbit']['userid'] %>
