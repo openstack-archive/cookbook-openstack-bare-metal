@@ -929,38 +929,27 @@ glance_protocol=<%= @glance_scheme %>
 # Options defined in keystonemiddleware.auth_token
 #
 
-# Host providing the admin Identity API endpoint (string
-# value)
-auth_host=<%= @identity_admin_endpoint.host %>
-
-# Port of the admin Identity API endpoint (integer value)
-auth_port=<%= @identity_admin_endpoint.port %>
-
-# Protocol of the admin Identity API endpoint(http or https)
-# (string value)
-auth_protocol=<%= @identity_admin_endpoint.scheme %>
-
 # Complete public Identity API endpoint. (string value)
 auth_uri=<%= @auth_uri %>
 
 # Complete admin Identity API endpoint. This should specify
-# the unversioned root endpoint e.g. https://localhost:3537/
+# the unversioned root endpoint e.g. https://localhost:35357/
 # (string value)
-identity_uri=<%= @identity_admin_endpoint.scheme %>://<%= @identity_admin_endpoint.host %>:<%= @identity_admin_endpoint.port %>
+identity_uri=<%= @identity_uri %>
 
 # API version of the admin Identity API endpoint. (string
 # value)
 auth_version=<%= node['openstack']['bare-metal']['api']['auth']['version'] %>
 
 # Keystone account username (string value)
-admin_user = <%= node['openstack']['bare-metal']['service_user'] %>
+admin_user=<%= node['openstack']['bare-metal']['service_user'] %>
 
 # Keystone account password (string value)
-admin_password = <%= @service_pass %>
+admin_password=<%= @service_pass %>
 
 # Keystone service account tenant name to validate user tokens
 # (string value)
-admin_tenant_name = <%= node['openstack']['bare-metal']['service_tenant_name'] %>
+admin_tenant_name=<%= node['openstack']['bare-metal']['service_tenant_name'] %>
 
 # Do not handle authorization requests within the middleware,
 # but delegate the authorization decision to downstream WSGI
