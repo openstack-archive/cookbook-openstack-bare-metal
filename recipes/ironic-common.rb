@@ -68,6 +68,7 @@ identity_admin_endpoint = admin_endpoint 'identity-admin'
 service_pass = get_password 'service', 'openstack-bare-metal'
 
 auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['bare-metal']['api']['auth']['version'])
+identity_uri = identity_uri_transform(identity_admin_endpoint)
 
 template '/etc/ironic/ironic.conf' do
   source 'ironic.conf.erb'
@@ -83,7 +84,7 @@ template '/etc/ironic/ironic.conf' do
     glance_host: image_endpoint.host,
     glance_port: image_endpoint.port,
     auth_uri: auth_uri,
-    identity_admin_endpoint: identity_admin_endpoint,
+    identity_uri: identity_uri,
     service_pass: service_pass
   )
 end

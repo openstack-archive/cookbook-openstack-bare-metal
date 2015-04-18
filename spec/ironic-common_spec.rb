@@ -76,7 +76,13 @@ describe 'openstack-bare-metal::ironic-common' do
         it 'sets the default auth attributes' do
           [
             /^insecure=false$/,
-            %r(^signing_dir=/var/cache/ironic/api$)
+            %r(^signing_dir=/var/cache/ironic/api$),
+            %r(^auth_uri=http://127.0.0.1:5000/v2.0$),
+            %r(^identity_uri=http://127.0.0.1:35357/$),
+            /^auth_version=v2.0$/,
+            /^admin_user=ironic$/,
+            /^admin_password=service_pass$/,
+            /^admin_tenant_name=service$/
           ].each do |line|
             expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', line)
           end
