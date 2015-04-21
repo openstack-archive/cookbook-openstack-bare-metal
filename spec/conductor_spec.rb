@@ -32,8 +32,10 @@ describe 'openstack-bare-metal::conductor' do
       expect(chef_run).to include_recipe('openstack-bare-metal::ironic-common')
     end
 
-    it 'upgrades ironic api packages' do
-      expect(chef_run).to upgrade_package('ironic-conductor')
+    it 'upgrades ironic conductor packages' do
+      %w(ironic-conductor shellinabox).each do |pkg|
+        expect(chef_run).to upgrade_package(pkg)
+      end
     end
 
     describe 'ironic-conductor packages' do
