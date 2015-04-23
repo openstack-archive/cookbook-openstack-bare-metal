@@ -1229,16 +1229,18 @@ signing_dir=<%= node['openstack']['bare-metal']['api']['auth']['cache_dir'] %>
 # (string value)
 #uefi_pxe_config_template=$pybasedir/drivers/modules/elilo_efi_pxe_config.template
 
+<% if node['openstack']['bare-metal']['tftp']['enabled'] %>
 # IP address of Ironic compute node's tftp server. (string
 # value)
-#tftp_server=$my_ip
+tftp_server=<%= node['openstack']['bare-metal']['tftp']['server'] %>
 
 # Ironic compute node's tftp root path. (string value)
-#tftp_root=/tftpboot
+tftp_root=<%= node['openstack']['bare-metal']['tftp']['root_path'] %>
 
 # Directory where master tftp images are stored on disk.
 # (string value)
-#tftp_master_path=/tftpboot/master_images
+tftp_master_path=<%= node['openstack']['bare-metal']['tftp']['master_path'] %>
+<% end %>
 
 # Bootfile DHCP parameter. (string value)
 #pxe_bootfile_name=pxelinux.0

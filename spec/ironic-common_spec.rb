@@ -97,6 +97,22 @@ describe 'openstack-bare-metal::ironic-common' do
         end
       end
 
+      context 'tftp' do
+        before do
+          node.set['openstack']['bare-metal']['tftp']['enabled'] = true
+        end
+
+        it 'sets tftp attributes' do
+          [
+            /^tftp_server=127.0.0.1$/,
+            %r(^tftp_root=/var/lib/tftpboot$),
+            %r(^tftp_master_path=/var/lib/tftpboot/master_images$)
+          ].each do |line|
+            expect(chef_run).to render_config_file(file.name).with_section_content('pxe', line)
+          end
+        end
+      end
+
       context 'rabbit mq backend' do
         before do
           node.set['openstack']['mq']['bare-metal']['service_type'] = 'rabbitmq'

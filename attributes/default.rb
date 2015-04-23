@@ -69,6 +69,15 @@ default['openstack']['bare-metal']['service_role'] = 'service'
 default['openstack']['bare-metal']['user'] = 'ironic'
 default['openstack']['bare-metal']['group'] = 'ironic'
 
+# Setup the tftp variables
+default['openstack']['bare-metal']['tftp']['enabled'] = false
+# IP address of Ironic compute node's tftp server
+default['openstack']['bare-metal']['tftp']['server'] = '127.0.0.1'
+# Ironic compute node's tftp root path
+default['openstack']['bare-metal']['tftp']['root_path'] = '/var/lib/tftpboot'
+# Directory where master tftp images are stored on disk
+default['openstack']['bare-metal']['tftp']['master_path'] = "#{node['openstack']['bare-metal']['tftp']['root_path']}/master_images"
+
 # rootwrap.conf
 default['openstack']['bare-metal']['rootwrap']['filters_path'] = '/etc/ironic/rootwrap.d,/usr/share/ironic/rootwrap'
 default['openstack']['bare-metal']['rootwrap']['exec_dirs'] = '/sbin,/usr/sbin,/bin,/usr/bin'
