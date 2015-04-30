@@ -1118,7 +1118,7 @@ signing_dir=<%= node['openstack']['bare-metal']['api']['auth']['cache_dir'] %>
 #
 
 # URL for connecting to neutron. (string value)
-#url=http://$my_ip:9696
+url=<%= @network_endpoint %>
 
 # Timeout value for connecting to neutron in seconds. (integer
 # value)

@@ -97,6 +97,10 @@ describe 'openstack-bare-metal::ironic-common' do
         end
       end
 
+      it 'has default neutron attributes' do
+        expect(chef_run).to render_config_file(file.name).with_section_content('neutron', %r(^url=http://127.0.0.1:9696$))
+      end
+
       context 'tftp' do
         before do
           node.set['openstack']['bare-metal']['tftp']['enabled'] = true

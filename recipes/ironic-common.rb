@@ -70,6 +70,8 @@ service_pass = get_password 'service', 'openstack-bare-metal'
 auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['bare-metal']['api']['auth']['version'])
 identity_uri = identity_uri_transform(identity_admin_endpoint)
 
+network_endpoint = internal_endpoint 'network-api' || {}
+
 template '/etc/ironic/ironic.conf' do
   source 'ironic.conf.erb'
   owner node['openstack']['bare-metal']['user']
@@ -80,6 +82,7 @@ template '/etc/ironic/ironic.conf' do
     mq_service_type: mq_service_type,
     mq_password: mq_password,
     rabbit_hosts: rabbit_hosts,
+    network_endpoint: network_endpoint,
     glance_protocol: image_endpoint.scheme,
     glance_host: image_endpoint.host,
     glance_port: image_endpoint.port,
