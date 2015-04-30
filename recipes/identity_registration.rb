@@ -75,7 +75,7 @@ openstack_identity_register 'Register Ironic bare metal Service User' do
   action :create_user
 end
 
-openstack_identity_register 'Grant service Role to Ironic Service User for Ironic Service Tenant' do
+openstack_identity_register 'Grant admin Role to Ironic Service User for Ironic Service Tenant' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
   tenant_name service_tenant_name
