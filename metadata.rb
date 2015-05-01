@@ -13,3 +13,4 @@ recipe           'openstack-bare-metal::identity_registration', 'Registers ironi
 recipe           'openstack-bare-metal::ironic-common', 'Defines the common pieces of repeated code from the other recipes'
 
 depends          'openstack-common', '>= 11.0.0'
+depends          'openstack-identity', '>= 11.0.0'
