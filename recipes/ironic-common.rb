@@ -71,6 +71,7 @@ auth_uri = auth_uri_transform(identity_endpoint.to_s, node['openstack']['bare-me
 identity_uri = identity_uri_transform(identity_admin_endpoint)
 
 network_endpoint = internal_endpoint 'network-api' || {}
+api_bind = internal_endpoint 'bare-metal-api-bind'
 
 template '/etc/ironic/ironic.conf' do
   source 'ironic.conf.erb'
@@ -78,6 +79,8 @@ template '/etc/ironic/ironic.conf' do
   group node['openstack']['bare-metal']['group']
   mode 00640
   variables(
+    api_bind_address: api_bind.host,
+    api_bind_port: api_bind.port,
     db_connection: db_connection,
     mq_service_type: mq_service_type,
     mq_password: mq_password,

@@ -522,10 +522,10 @@ log_dir=<%= node['openstack']['bare-metal']['log_dir'] %>
 #
 
 # The listen IP for the Ironic API server. (string value)
-#host_ip=0.0.0.0
+host_ip=<%= @api_bind_address %>
 
 # The port for the Ironic API server. (integer value)
-#port=6385
+port=<%= @api_bind_port %>
 
 # The maximum number of items returned in a single response
 # from a collection resource. (integer value)
