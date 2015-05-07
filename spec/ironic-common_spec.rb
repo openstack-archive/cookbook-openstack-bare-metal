@@ -70,6 +70,15 @@ describe 'openstack-bare-metal::ironic-common' do
         end
       end
 
+      it 'has the default conductor attributes' do
+        [
+          /^periodic_max_workers=8$/,
+          /^workers_pool_size=100$/
+        ].each do |line|
+          expect(chef_run).to render_config_file(file.name).with_section_content('conductor', line)
+        end
+      end
+
       context 'template contents' do
         it 'has the default rpc_backend attribute' do
           expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^rpc_backend=rabbit$/)

@@ -576,10 +576,10 @@ log_dir=<%= node['openstack']['bare-metal']['log_dir'] %>
 # Maximum number of worker threads that can be started
 # simultaneously by a periodic task. Should be less than RPC
 # thread pool size. (integer value)
-#periodic_max_workers=8
+periodic_max_workers=<%= node['openstack']['bare-metal']['conductor']['periodic_max_workers'] %>
 
 # The size of the workers greenthread pool. (integer value)
-#workers_pool_size=100
+workers_pool_size=<%= node['openstack']['bare-metal']['conductor']['workers_pool_size'] %>
 
 # Number of attempts to grab a node lock. (integer value)
 #node_locked_retry_attempts=3

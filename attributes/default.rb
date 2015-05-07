@@ -28,6 +28,14 @@ default['openstack']['bare-metal']['custom_template_banner'] = "
 default['openstack']['bare-metal']['verbose'] = 'false'
 default['openstack']['bare-metal']['debug'] = 'false'
 
+# Maximum number of worker threads that can be started
+# simultaneously by a periodic task. Should be less than RPC
+# thread pool size. (integer value)
+default['openstack']['bare-metal']['conductor']['periodic_max_workers'] = 8
+
+# The size of the workers greenthread pool. (integer value)
+default['openstack']['bare-metal']['conductor']['workers_pool_size'] = 100
+
 # Common rpc definitions
 default['openstack']['bare-metal']['rpc_thread_pool_size'] = 64
 default['openstack']['bare-metal']['rpc_conn_pool_size'] = 30
