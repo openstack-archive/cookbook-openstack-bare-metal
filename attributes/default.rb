@@ -40,6 +40,11 @@ default['openstack']['bare-metal']['conductor']['workers_pool_size'] = 100
 default['openstack']['bare-metal']['rpc_thread_pool_size'] = 64
 default['openstack']['bare-metal']['rpc_conn_pool_size'] = 30
 default['openstack']['bare-metal']['rpc_response_timeout'] = 60
+
+# The name of the Chef role that knows about the message queue server
+# that Ironic uses
+default['openstack']['bare-metal']['rabbit_server_chef_role'] = 'os-ops-messaging'
+
 case node['openstack']['mq']['service_type']
 when 'rabbitmq'
   default['openstack']['bare-metal']['rpc_backend'] = 'rabbit'

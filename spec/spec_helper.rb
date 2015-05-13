@@ -35,5 +35,7 @@ shared_context 'bare-metal-stubs' do
     allow_any_instance_of(Chef::Recipe).to receive(:get_secret)
       .with('openstack_identity_bootstrap_token')
       .and_return('bootstrap-token')
+    allow_any_instance_of(Chef::Recipe).to receive(:rabbit_servers)
+      .and_return('1.1.1.1:5672,2.2.2.2:5672')
   end
 end

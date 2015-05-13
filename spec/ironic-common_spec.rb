@@ -135,20 +135,116 @@ describe 'openstack-bare-metal::ironic-common' do
         end
       end
 
+      context 'qpid as mq service' do
+        before do
+          node.set['openstack']['mq']['bare-metal']['service_type'] = 'qpid'
+        end
+
+        it 'has default RPC/AMQP options set' do
+          [/^rpc_conn_pool_size=30$/,
+           /^amqp_durable_queues=false$/,
+           /^amqp_auto_delete=false$/].each do |line|
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', line)
+          end
+        end
+
+        %w(port username sasl_mechanisms reconnect reconnect_timeout reconnect_limit
+           reconnect_interval_min reconnect_interval_max reconnect_interval heartbeat protocol
+           tcp_nodelay).each do |attr|
+          it "has qpid_#{attr} attribute" do
+            node.set['openstack']['mq']['bare-metal']['qpid'][attr] = "qpid_#{attr}_value"
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_#{attr}=qpid_#{attr}_value$/)
+          end
+        end
+
+        it 'has qpid_hostname' do
+          node.set['openstack']['mq']['bare-metal']['qpid']['host'] = 'qpid_host_value'
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_hostname=qpid_host_value$/)
+        end
+
+        it 'has qpid_password' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_password=user_pass$/)
+        end
+
+        it 'has default qpid topology version' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', /^qpid_topology_version=1$/)
+        end
+      end
+
       context 'rabbit mq backend' do
         before do
           node.set['openstack']['mq']['bare-metal']['service_type'] = 'rabbitmq'
         end
 
+        it 'has default RPC/AMQP options set' do
+          [/^rpc_conn_pool_size=30$/,
+           /^amqp_durable_queues=false$/,
+           /^amqp_auto_delete=false$/].each do |line|
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
+          end
+        end
+
         it 'does not have kombu ssl version set' do
-          expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+          expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
         end
 
         it 'sets kombu ssl version' do
           node.set['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] = true
           node.set['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] = 'TLSv1.2'
 
-          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
+        end
+
+        context 'ha attributes' do
+          before do
+            node.set['openstack']['mq']['bare-metal']['rabbit']['ha'] = true
+          end
+
+          it 'has a rabbit_hosts attribute' do
+            allow_any_instance_of(Chef::Recipe).to receive(:rabbit_servers)
+              .and_return('rabbit_servers_value')
+
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_hosts=rabbit_servers_value$/)
+          end
+
+          %w(host port).each do |attr|
+            it "does not have rabbit_#{attr} attribute" do
+              expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr}=/)
+            end
+          end
+        end
+
+        context 'non ha attributes' do
+          before do
+            node.set['openstack']['mq']['bare-metal']['rabbit']['ha'] = false
+          end
+
+          %w(host port).each do |attr|
+            it "has rabbit_#{attr} attribute" do
+              node.set['openstack']['mq']['bare-metal']['rabbit'][attr] = "rabbit_#{attr}_value"
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr}=rabbit_#{attr}_value$/)
+            end
+          end
+
+          it 'does not have a rabbit_hosts attribute' do
+            expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_hosts=/)
+          end
+        end
+
+        %w(use_ssl userid).each do |attr|
+          it "has rabbit_#{attr}" do
+            node.set['openstack']['mq']['bare-metal']['rabbit'][attr] = "rabbit_#{attr}_value"
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_#{attr}=rabbit_#{attr}_value$/)
+          end
+        end
+
+        it 'has rabbit_password' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_password=user_pass$/)
+        end
+
+        it 'has rabbit_virtual_host' do
+          node.set['openstack']['mq']['bare-metal']['rabbit']['vhost'] = 'vhost_value'
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_virtual_host=vhost_value$/)
         end
       end
     end

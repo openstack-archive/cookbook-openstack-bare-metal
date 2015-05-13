@@ -2,114 +2,6 @@
 
 [DEFAULT]
 
-#
-# Options defined in oslo.messaging
-#
-
-# Use durable queues in AMQP. (boolean value)
-# Deprecated group/name - [DEFAULT]/rabbit_durable_queues
-amqp_durable_queues=<%= node['openstack']['mq']['bare-metal']['durable_queues'] %>
-
-# Auto-delete queues in AMQP. (boolean value)
-amqp_auto_delete=<%= node['openstack']['mq']['bare-metal']['auto_delete'] %>
-
-# Size of RPC connection pool. (integer value)
-rpc_conn_pool_size=<%= node['openstack']['bare-metal']['rpc_conn_pool_size'] %>
-
-<% if @mq_service_type == 'rabbitmq'  %>
-<% if node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] && node['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] %>
-kombu_ssl_version=<%= node['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] %>
-<% end -%>
-
-##### RABBITMQ #####
-# The RabbitMQ userid. (string value)
-rabbit_userid=<%= node['openstack']['mq']['bare-metal']['rabbit']['userid'] %>
-
-# The RabbitMQ password. (string value)
-rabbit_password=<%= @mq_password %>
-
-# The RabbitMQ virtual host. (string value)
-rabbit_virtual_host=<%= node['openstack']['mq']['bare-metal']['rabbit']['vhost'] %>
-<% if node['openstack']['mq']['bare-metal']['rabbit']['ha'] -%>
-# RabbitMQ HA cluster host:port pairs. (list value)
-rabbit_hosts=<%= @rabbit_hosts %>
-
-# Use HA queues in RabbitMQ (x-ha-policy: all). If you change
-# this option, you must wipe the RabbitMQ database. (boolean
-# value)
-rabbit_ha_queues=True
-
-rabbit_use_ssl=<%= node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] %>
-<% else -%>
-# The RabbitMQ broker address where a single node is used.
-# (string value)
-rabbit_host=<%= node['openstack']['mq']['bare-metal']['rabbit']['host'] %>
-
-# The RabbitMQ broker port where a single node is used.
-# (integer value)
-rabbit_port=<%= node['openstack']['mq']['bare-metal']['rabbit']['port'] %>
-
-# Connect over SSL for RabbitMQ. (boolean value)
-rabbit_use_ssl=<%= node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] %>
-<% end -%>
-<% end -%>
-
-<% if @mq_service_type == 'qpid'  %>
-##### QPID #####
-# Qpid broker hostname. (string value)
-qpid_hostname=<%= node['openstack']['mq']['bare-metal']['qpid']['host'] %>
-
-# Qpid broker port. (integer value)
-qpid_port=<%= node['openstack']['mq']['bare-metal']['qpid']['port'] %>
-
-# Password for Qpid connection. (string value)
-qpid_password=<%= @mq_password %>
-
-# Username for Qpid connection. (string value)
-qpid_username=<%= node['openstack']['mq']['bare-metal']['qpid']['username'] %>
-
-# Space separated list of SASL mechanisms to use for auth.
-# (string value)
-qpid_sasl_mechanisms=<%= node['openstack']['mq']['bare-metal']['qpid']['sasl_mechanisms'] %>
-qpid_reconnect_timeout=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_timeout'] %>
-qpid_reconnect_limit=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_limit'] %>
-qpid_reconnect_interval_min=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_interval_min'] %>
-qpid_reconnect_interval_max=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_interval_max'] %>
-qpid_reconnect_interval=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_interval'] %>
-
-# Seconds between connection keepalive heartbeats. (integer
-# value)
-qpid_heartbeat=<%= node['openstack']['mq']['bare-metal']['qpid']['heartbeat'] %>
-
-# qpid protocol. default 'tcp'. set to 'ssl' to enable SSL
-qpid_protocol=<%= node['openstack']['mq']['bare-metal']['qpid']['protocol'] %>
-
-# Whether to disable the Nagle algorithm. (boolean value)
-qpid_tcp_nodelay=<%= node['openstack']['mq']['bare-metal']['qpid']['tcp_nodelay'] %>
-
-# The qpid topology version to use.  Version 1 is what was
-# originally used by impl_qpid.  Version 2 includes some
-# backwards-incompatible changes that allow broker federation
-# to work.  Users should update to version 2 when they are
-# able to take everything down, as it requires a clean break.
-# (integer value)
-qpid_topology_version=<%= node['openstack']['mq']['bare-metal']['qpid']['topology_version'] %>
-<% end %>
-
-
-# Qpid HA cluster host:port pairs. (list value)
-#qpid_hosts=$qpid_hostname:$qpid_port
-
-
-# The number of prefetched messages held by receiver. (integer
-# value)
-#qpid_receiver_capacity=1
-
-# SSL version to use (valid only if SSL enabled). valid values
-# are TLSv1 and SSLv23. SSLv2 and SSLv3 may be available on
-# some distributions. (string value)
-#kombu_ssl_version=
-
 # SSL key file (valid only if SSL enabled). (string value)
 #kombu_ssl_keyfile=
 
@@ -123,24 +15,6 @@ qpid_topology_version=<%= node['openstack']['mq']['bare-metal']['qpid']['topolog
 # How long to wait before reconnecting in response to an AMQP
 # consumer cancel notification. (floating point value)
 #kombu_reconnect_delay=1.0
-
-
-
-# The RabbitMQ login method. (string value)
-#rabbit_login_method=AMQPLAIN
-
-
-# How frequently to retry connecting with RabbitMQ. (integer
-# value)
-#rabbit_retry_interval=1
-
-# How long to backoff for between retries when connecting to
-# RabbitMQ. (integer value)
-#rabbit_retry_backoff=2
-
-# Maximum number of RabbitMQ connection retries. Default is 0
-# (infinite retry count). (integer value)
-#rabbit_max_retries=0
 
 # Deprecated, use rpc_backend=kombu+memory or rpc_backend=fake
 # (boolean value)
@@ -1182,6 +1056,147 @@ url=<%= @network_endpoint %>
 
 # Accept clients using either SSL or plain TCP (boolean value)
 #allow_insecure_clients=false
+
+
+<% if @mq_service_type == "qpid"  %>
+[oslo_messaging_qpid]
+
+#
+# From oslo.messaging
+#
+
+# Use durable queues in AMQP. (boolean value)
+# Deprecated group/name - [DEFAULT]/rabbit_durable_queues
+amqp_durable_queues=<%= node['openstack']['mq']['bare-metal']['durable_queues'] %>
+
+# Auto-delete queues in AMQP. (boolean value)
+amqp_auto_delete=<%= node['openstack']['mq']['bare-metal']['auto_delete'] %>
+
+# Size of RPC connection pool. (integer value)
+rpc_conn_pool_size=<%= node['openstack']['bare-metal']['rpc_conn_pool_size'] %>
+
+##### QPID #####
+# Qpid broker hostname. (string value)
+qpid_hostname=<%= node['openstack']['mq']['bare-metal']['qpid']['host'] %>
+
+# Qpid broker port. (integer value)
+qpid_port=<%= node['openstack']['mq']['bare-metal']['qpid']['port'] %>
+
+# Password for Qpid connection. (string value)
+qpid_password=<%= @mq_password %>
+
+# Username for Qpid connection. (string value)
+qpid_username=<%= node['openstack']['mq']['bare-metal']['qpid']['username'] %>
+
+# Space separated list of SASL mechanisms to use for auth.
+# (string value)
+qpid_sasl_mechanisms=<%= node['openstack']['mq']['bare-metal']['qpid']['sasl_mechanisms'] %>
+qpid_reconnect=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect'] %>
+qpid_reconnect_timeout=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_timeout'] %>
+qpid_reconnect_limit=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_limit'] %>
+qpid_reconnect_interval_min=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_interval_min'] %>
+qpid_reconnect_interval_max=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_interval_max'] %>
+qpid_reconnect_interval=<%= node['openstack']['mq']['bare-metal']['qpid']['reconnect_interval'] %>
+
+# Seconds between connection keepalive heartbeats. (integer
+# value)
+qpid_heartbeat=<%= node['openstack']['mq']['bare-metal']['qpid']['heartbeat'] %>
+
+# qpid protocol. default 'tcp'. set to 'ssl' to enable SSL
+qpid_protocol=<%= node['openstack']['mq']['bare-metal']['qpid']['protocol'] %>
+
+# Whether to disable the Nagle algorithm. (boolean value)
+qpid_tcp_nodelay=<%= node['openstack']['mq']['bare-metal']['qpid']['tcp_nodelay'] %>
+
+# The qpid topology version to use.  Version 1 is what was
+# originally used by impl_qpid.  Version 2 includes some
+# backwards-incompatible changes that allow broker federation
+# to work.  Users should update to version 2 when they are
+# able to take everything down, as it requires a clean break.
+# (integer value)
+qpid_topology_version=<%= node['openstack']['mq']['bare-metal']['qpid']['topology_version'] %>
+
+# Qpid HA cluster host:port pairs. (list value)
+#qpid_hosts=$qpid_hostname:$qpid_port
+
+# The number of prefetched messages held by receiver. (integer
+# value)
+#qpid_receiver_capacity=1
+<% end %>
+
+
+<% if @mq_service_type == "rabbitmq"  %>
+[oslo_messaging_rabbit]
+
+#
+# From oslo.messaging
+#
+
+# Use durable queues in AMQP. (boolean value)
+# Deprecated group/name - [DEFAULT]/rabbit_durable_queues
+amqp_durable_queues=<%= node['openstack']['mq']['bare-metal']['durable_queues'] %>
+
+# Auto-delete queues in AMQP. (boolean value)
+amqp_auto_delete=<%= node['openstack']['mq']['bare-metal']['auto_delete'] %>
+
+# Size of RPC connection pool. (integer value)
+rpc_conn_pool_size=<%= node['openstack']['bare-metal']['rpc_conn_pool_size'] %>
+
+<% if node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] && node['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] %>
+# SSL version to use (valid only if SSL enabled). valid values
+# are TLSv1 and SSLv23. SSLv2 and SSLv3 may be available on
+# some distributions. (string value)
+kombu_ssl_version=<%= node['openstack']['mq']['bare-metal']['rabbit']['kombu_ssl_version'] %>
+<% end -%>
+
+##### RABBITMQ #####
+# The RabbitMQ userid. (string value)
+rabbit_userid=<%= node['openstack']['mq']['bare-metal']['rabbit']['userid'] %>
+
+# The RabbitMQ password. (string value)
+rabbit_password=<%= @mq_password %>
+
+# The RabbitMQ virtual host. (string value)
+rabbit_virtual_host=<%= node['openstack']['mq']['bare-metal']['rabbit']['vhost'] %>
+<% if node['openstack']['mq']['bare-metal']['rabbit']['ha'] -%>
+# RabbitMQ HA cluster host:port pairs. (list value)
+rabbit_hosts=<%= @rabbit_hosts %>
+
+# Use HA queues in RabbitMQ (x-ha-policy: all). If you change
+# this option, you must wipe the RabbitMQ database. (boolean
+# value)
+rabbit_ha_queues=True
+
+rabbit_use_ssl=<%= node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] %>
+<% else -%>
+# The RabbitMQ broker address where a single node is used.
+# (string value)
+rabbit_host=<%= node['openstack']['mq']['bare-metal']['rabbit']['host'] %>
+
+# The RabbitMQ broker port where a single node is used.
+# (integer value)
+rabbit_port=<%= node['openstack']['mq']['bare-metal']['rabbit']['port'] %>
+
+# Connect over SSL for RabbitMQ. (boolean value)
+rabbit_use_ssl=<%= node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] %>
+<% end -%>
+
+# The RabbitMQ login method. (string value)
+#rabbit_login_method=AMQPLAIN
+
+
+# How frequently to retry connecting with RabbitMQ. (integer
+# value)
+#rabbit_retry_interval=1
+
+# How long to backoff for between retries when connecting to
+# RabbitMQ. (integer value)
+#rabbit_retry_backoff=2
+
+# Maximum number of RabbitMQ connection retries. Default is 0
+# (infinite retry count). (integer value)
+#rabbit_max_retries=0
+<% end -%>
 
 
 [pxe]
