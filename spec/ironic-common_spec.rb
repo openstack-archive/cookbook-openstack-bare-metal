@@ -60,6 +60,15 @@ describe 'openstack-bare-metal::ironic-common' do
         )
       end
 
+      it 'has the default api attributes' do
+        [
+          /^host_ip=127.0.0.1$/,
+          /^port=6385$/
+        ].each do |line|
+          expect(chef_run).to render_config_file(file.name).with_section_content('api', line)
+        end
+      end
+
       it 'has the default glance attributes' do
         [
           /^glance_host=127.0.0.1$/,
