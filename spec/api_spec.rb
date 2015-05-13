@@ -40,7 +40,7 @@ describe 'openstack-bare-metal::api' do
       let(:package) { chef_run.package('ironic-api') }
 
       it 'sends a notification to the service' do
-        expect(package).to notify('service[ironic-api]').to(:restart)
+        expect(package).to notify('service[ironic-api]').to(:restart).delayed
       end
     end
 
@@ -64,7 +64,7 @@ describe 'openstack-bare-metal::api' do
       end
 
       it 'subscribes to the common packages' do
-        expect(service).to subscribe_to('package[python-ironicclient]')
+        expect(service).to subscribe_to('package[python-ironicclient]').delayed
       end
     end
 

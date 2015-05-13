@@ -33,7 +33,7 @@ describe 'openstack-bare-metal::conductor' do
     end
 
     it 'upgrades ironic conductor packages' do
-      %w(ironic-conductor shellinabox).each do |pkg|
+      %w(ironic-conductor shellinabox ipmitool).each do |pkg|
         expect(chef_run).to upgrade_package(pkg)
       end
     end
@@ -42,7 +42,7 @@ describe 'openstack-bare-metal::conductor' do
       let(:package) { chef_run.package('ironic-conductor') }
 
       it 'sends a notification to the service' do
-        expect(package).to notify('service[ironic-conductor]').to(:restart)
+        expect(package).to notify('service[ironic-conductor]').to(:restart).delayed
       end
     end
 
@@ -58,7 +58,7 @@ describe 'openstack-bare-metal::conductor' do
       end
 
       it 'subscribes to the common packages' do
-        expect(service).to subscribe_to('package[python-ironicclient]')
+        expect(service).to subscribe_to('package[python-ironicclient]').delayed
       end
     end
   end

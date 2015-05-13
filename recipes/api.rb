@@ -30,7 +30,7 @@ platform_options['ironic_api_packages'].each do |pkg|
   package pkg do
     action :upgrade
 
-    notifies :restart, 'service[ironic-api]'
+    notifies :restart, 'service[ironic-api]', :delayed
   end
 end
 
@@ -50,7 +50,7 @@ service 'ironic-api' do
   subscribes :restart, 'template[/etc/ironic/ironic.conf]'
 
   platform_options['ironic_common_packages'].each do |pkg|
-    subscribes :restart, "package[#{pkg}]"
+    subscribes :restart, "package[#{pkg}]", :delayed
   end
 end
 
