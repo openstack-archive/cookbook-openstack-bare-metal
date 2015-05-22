@@ -30,7 +30,8 @@ Bugs should be filed on Launchpad, not GitHub:
 Contacts
 --------
 
-Mailing list: groups.google.com/group/opscode-chef-openstack
+Mailing List URL: http://lists.openstack.org/cgi-bin/mailman/listinfo/openstack-dev
+Mailing List Topic: [chef]
 IRC: #openstack-chef is our channel on irc.freenode.net
-Wiki: https://wiki.openstack.org/wiki/Chef/GettingStarted and https://docs.getchef.com/openstack.html
+Wiki: https://wiki.openstack.org/wiki/Chef
 Twitter: @chefopenstack

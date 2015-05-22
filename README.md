@@ -10,11 +10,19 @@ https://wiki.openstack.org/wiki/Ironic
 Requirements
 ------------
 
-Chef 11 or higher required (for Chef environment use).
+Chef 12 or higher required (for Chef environment use).
 
 Attributes
 ----------
-TODO: List your cookbook attributes here.
+
+Please see the extensive inline documentation in `attributes/*.rb` for descriptions
+of all the settable attributes for this cookbook.
+
+There are also many common attributes shared across the cookbooks that are found in
+the cookbook-openstack-common cookbook attribute files.
+
+Note that all attributes are in the `default["openstack"]` "namespace"
+
 
 Usage
 -----
