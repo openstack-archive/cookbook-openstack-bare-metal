@@ -44,7 +44,7 @@ end
 directory '/etc/ironic' do
   owner node['openstack']['bare-metal']['user']
   group node['openstack']['bare-metal']['group']
-  mode  00750
+  mode 00750
   action :create
 end
 
@@ -98,7 +98,7 @@ end
 template '/etc/ironic/rootwrap.conf' do
   source 'rootwrap.conf.erb'
   # Must be root!
-  owner  'root'
-  group  'root'
-  mode   00644
+  owner 'root'
+  group 'root'
+  mode 00644
 end
