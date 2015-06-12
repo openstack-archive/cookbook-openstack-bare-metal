@@ -1187,7 +1187,7 @@ rabbit_use_ssl=<%= node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] %>
 
 # How frequently to retry connecting with RabbitMQ. (integer
 # value)
-#rabbit_retry_interval=1
+rabbit_retry_interval=<%= node['openstack']['mq']['bare-metal']['rabbit']['rabbit_retry_interval'] %>
 
 # How long to backoff for between retries when connecting to
 # RabbitMQ. (integer value)
@@ -1195,7 +1195,7 @@ rabbit_use_ssl=<%= node['openstack']['mq']['bare-metal']['rabbit']['use_ssl'] %>
 
 # Maximum number of RabbitMQ connection retries. Default is 0
 # (infinite retry count). (integer value)
-#rabbit_max_retries=0
+rabbit_max_retries=<%= node['openstack']['mq']['bare-metal']['rabbit']['rabbit_max_retries'] %>
 <% end -%>
 
 

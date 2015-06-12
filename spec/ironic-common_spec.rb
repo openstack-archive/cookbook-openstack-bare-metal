@@ -246,6 +246,14 @@ describe 'openstack-bare-metal::ironic-common' do
           node.set['openstack']['mq']['bare-metal']['rabbit']['vhost'] = 'vhost_value'
           expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_virtual_host=vhost_value$/)
         end
+
+        it 'has the default rabbit_retry_interval set' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_retry_interval=1$/)
+        end
+
+        it 'has the default rabbit_max_retries set' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^rabbit_max_retries=0$/)
+        end
       end
     end
 
