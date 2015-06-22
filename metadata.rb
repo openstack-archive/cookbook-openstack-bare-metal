@@ -12,5 +12,5 @@ recipe 'openstack-bare-metal::default', 'Temp workaround to create ironic db wit
 recipe 'openstack-bare-metal::identity_registration', 'Registers ironic service/user/endpoints in keystone'
 recipe 'openstack-bare-metal::ironic-common', 'Defines the common pieces of repeated code from the other recipes'
 
-depends 'openstack-common', '>= 11.4.0'
+depends 'openstack-common', '>= 11.5.0'
 depends 'openstack-identity', '>= 11.0.0'
