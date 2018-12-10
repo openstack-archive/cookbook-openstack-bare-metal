@@ -43,7 +43,7 @@ shared_context 'bare-metal-stubs' do
       .with('service', 'openstack-bare-metal')
       .and_return('ironic_pass')
     allow_any_instance_of(Chef::Recipe).to receive(:rabbit_transport_url)
-      .with('baremetal')
+      .with('bare_metal')
       .and_return('rabbit://guest:mypass@127.0.0.1:5672')
     stub_command('/usr/sbin/httpd -t').and_return(true)
     stub_command('/usr/sbin/apache2 -t').and_return(true)
@@ -149,7 +149,7 @@ end
 shared_examples 'logging' do
   context 'with logging enabled' do
     before do
-      node.override['openstack']['baremetal']['syslog']['use'] = true
+      node.override['openstack']['bare_metal']['syslog']['use'] = true
     end
 
     it 'runs logging recipe if node attributes say to' do
@@ -159,7 +159,7 @@ shared_examples 'logging' do
 
   context 'with logging disabled' do
     before do
-      node.override['openstack']['baremetal']['syslog']['use'] = false
+      node.override['openstack']['bare_metal']['syslog']['use'] = false
     end
 
     it 'does not run logging recipe' do
