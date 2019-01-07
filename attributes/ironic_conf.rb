@@ -1,7 +1,7 @@
-default['openstack']['baremetal']['conf_secrets'] = {}
+default['openstack']['bare_metal']['conf_secrets'] = {}
 
-default['openstack']['baremetal']['conf'].tap do |conf|
-  if node['openstack']['baremetal']['syslog']['use']
+default['openstack']['bare_metal']['conf'].tap do |conf|
+  if node['openstack']['bare_metal']['syslog']['use']
     conf['DEFAULT']['log_config'] = '/etc/openstack/logging.conf'
   end
   conf['DEFAULT']['auth_strategy'] = 'keystone'

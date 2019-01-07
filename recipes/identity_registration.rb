@@ -28,22 +28,22 @@ identity_endpoint = internal_endpoint 'identity'
 auth_url = ::URI.decode identity_endpoint.to_s
 
 interfaces = {
-  public: { url: public_endpoint('baremetal') },
-  internal: { url: internal_endpoint('baremetal') },
-  admin: { url: admin_endpoint('baremetal') },
+  public: { url: public_endpoint('bare_metal') },
+  internal: { url: internal_endpoint('bare_metal') },
+  admin: { url: admin_endpoint('bare_metal') },
 }
 service_pass = get_password 'service', 'openstack-bare-metal'
-region = node['openstack']['baremetal']['region']
-service_project_name = node['openstack']['baremetal']['conf']['keystone_authtoken']['project_name']
-service_user = node['openstack']['baremetal']['service_user']
+region = node['openstack']['bare_metal']['region']
+service_project_name = node['openstack']['bare_metal']['conf']['keystone_authtoken']['project_name']
+service_user = node['openstack']['bare_metal']['service_user']
 admin_user = node['openstack']['identity']['admin_user']
 admin_pass = get_password 'user', node['openstack']['identity']['admin_user']
 admin_project = node['openstack']['identity']['admin_project']
 admin_domain = node['openstack']['identity']['admin_domain_name']
-service_domain_name = node['openstack']['baremetal']['conf']['keystone_authtoken']['user_domain_name']
-service_role = node['openstack']['baremetal']['service_role']
-service_name = node['openstack']['baremetal']['service_name']
-service_type = node['openstack']['baremetal']['service_type']
+service_domain_name = node['openstack']['bare_metal']['conf']['keystone_authtoken']['user_domain_name']
+service_role = node['openstack']['bare_metal']['service_role']
+service_name = node['openstack']['bare_metal']['service_name']
+service_type = node['openstack']['bare_metal']['service_type']
 
 connection_params = {
   openstack_auth_url:     "#{auth_url}/auth/tokens",

@@ -24,7 +24,7 @@ end
 
 include_recipe 'openstack-bare-metal::ironic-common'
 
-platform_options = node['openstack']['baremetal']['platform']
+platform_options = node['openstack']['bare_metal']['platform']
 
 platform_options['ironic_api_packages'].each do |pkg|
   package pkg do
@@ -35,8 +35,8 @@ platform_options['ironic_api_packages'].each do |pkg|
 end
 
 directory '/var/cache/ironic' do
-  owner node['openstack']['baremetal']['user']
-  group node['openstack']['baremetal']['group']
+  owner node['openstack']['bare_metal']['user']
+  group node['openstack']['bare_metal']['group']
   mode 00700
   action :create
 end
@@ -58,7 +58,7 @@ apache_config 'ironic-wsgi' do
   enable false
 end
 
-bind_service = node['openstack']['bind_service']['all']['baremetal']
+bind_service = node['openstack']['bind_service']['all']['bare_metal']
 
 web_app 'ironic-api' do
   template 'wsgi-template.conf.erb'
@@ -68,14 +68,14 @@ web_app 'ironic-api' do
   server_entry '/usr/bin/ironic-api-wsgi'
   log_dir node['apache']['log_dir']
   run_dir node['apache']['run_dir']
-  user node['openstack']['baremetal']['user']
-  group node['openstack']['baremetal']['group']
-  use_ssl node['openstack']['baremetal']['ssl']['enabled']
-  cert_file node['openstack']['baremetal']['ssl']['certfile']
-  chain_file node['openstack']['baremetal']['ssl']['chainfile']
-  key_file node['openstack']['baremetal']['ssl']['keyfile']
-  ca_certs_path node['openstack']['baremetal']['ssl']['ca_certs_path']
-  cert_required node['openstack']['baremetal']['ssl']['cert_required']
-  protocol node['openstack']['baremetal']['ssl']['protocol']
-  ciphers node['openstack']['baremetal']['ssl']['ciphers']
+  user node['openstack']['bare_metal']['user']
+  group node['openstack']['bare_metal']['group']
+  use_ssl node['openstack']['bare_metal']['ssl']['enabled']
+  cert_file node['openstack']['bare_metal']['ssl']['certfile']
+  chain_file node['openstack']['bare_metal']['ssl']['chainfile']
+  key_file node['openstack']['bare_metal']['ssl']['keyfile']
+  ca_certs_path node['openstack']['bare_metal']['ssl']['ca_certs_path']
+  cert_required node['openstack']['bare_metal']['ssl']['cert_required']
+  protocol node['openstack']['bare_metal']['ssl']['protocol']
+  ciphers node['openstack']['bare_metal']['ssl']['ciphers']
 end

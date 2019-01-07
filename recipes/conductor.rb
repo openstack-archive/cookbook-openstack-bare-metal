@@ -24,7 +24,7 @@ end
 
 include_recipe 'openstack-bare-metal::ironic-common'
 
-platform_options = node['openstack']['baremetal']['platform']
+platform_options = node['openstack']['bare_metal']['platform']
 
 platform_options['ironic_conductor_packages'].each do |pkg|
   package pkg do

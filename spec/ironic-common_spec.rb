@@ -64,7 +64,7 @@ describe 'openstack-bare-metal::ironic-common' do
       context 'template contents' do
         context 'syslog use' do
           it 'sets the log_config value when syslog is in use' do
-            node.override['openstack']['baremetal']['syslog']['use'] = true
+            node.override['openstack']['bare_metal']['syslog']['use'] = true
 
             expect(chef_run).to render_file(file.name)
               .with_content(%r{^log_config = /etc/openstack/logging.conf$})

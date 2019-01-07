@@ -17,7 +17,7 @@ describe 'openstack-bare-metal::identity_registration' do
       openstack_project_name: 'admin',
       openstack_domain_name: 'default',
     }
-    service_name = 'baremetal'
+    service_name = 'bare_metal'
     service_project = 'ironic'
     service_user = 'ironic'
 
