@@ -25,14 +25,14 @@ default['openstack']['bare_metal']['custom_template_banner'] = "
 # Do not edit, changes will be overwritten
 "
 
-%w(admin internal public).each do |ep_type|
-  # host for openstack admin/internal/public bare metal endpoint
+%w(internal public).each do |ep_type|
+  # host for openstack internal/public bare metal endpoint
   default['openstack']['endpoints'][ep_type]['bare_metal']['host'] = '127.0.0.1'
-  # scheme for openstack admin/internal/public bare metal endpoint
+  # scheme for openstack internal/public bare metal endpoint
   default['openstack']['endpoints'][ep_type]['bare_metal']['scheme'] = 'http'
-  # port for openstack admin/internal/public bare metal endpoint
+  # port for openstack internal/public bare metal endpoint
   default['openstack']['endpoints'][ep_type]['bare_metal']['port'] = 6385
-  # path for openstack admin/internal/public bare metal endpoint
+  # path for openstack internal/public bare metal endpoint
   default['openstack']['endpoints'][ep_type]['bare_metal']['path'] = ''
 end
 
@@ -125,7 +125,7 @@ end
 # ******************** OpenStack Bare Metal Endpoints *****************************
 
 # The OpenStack Bare Metal (Ironic) API endpoint
-%w(public internal admin).each do |ep_type|
+%w(public internal).each do |ep_type|
   default['openstack']['endpoints'][ep_type]['bare_metal']['scheme'] = 'http'
   default['openstack']['endpoints'][ep_type]['bare_metal']['path'] = ''
   default['openstack']['endpoints'][ep_type]['bare_metal']['host'] = '127.0.0.1'

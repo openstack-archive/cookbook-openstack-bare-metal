@@ -16,6 +16,7 @@ describe 'openstack-bare-metal::identity_registration' do
       openstack_api_key: 'admin_test_pass',
       openstack_project_name: 'admin',
       openstack_domain_name: 'default',
+      openstack_endpoint_type: 'internalURL',
     }
     service_name = 'bare_metal'
     service_project = 'ironic'

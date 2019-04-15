@@ -30,7 +30,6 @@ auth_url = ::URI.decode identity_endpoint.to_s
 interfaces = {
   public: { url: public_endpoint('bare_metal') },
   internal: { url: internal_endpoint('bare_metal') },
-  admin: { url: admin_endpoint('bare_metal') },
 }
 service_pass = get_password 'service', 'openstack-bare-metal'
 region = node['openstack']['bare_metal']['region']
@@ -40,6 +39,7 @@ admin_user = node['openstack']['identity']['admin_user']
 admin_pass = get_password 'user', node['openstack']['identity']['admin_user']
 admin_project = node['openstack']['identity']['admin_project']
 admin_domain = node['openstack']['identity']['admin_domain_name']
+endpoint_type = node['openstack']['identity']['endpoint_type']
 service_domain_name = node['openstack']['bare_metal']['conf']['keystone_authtoken']['user_domain_name']
 service_role = node['openstack']['bare_metal']['service_role']
 service_name = node['openstack']['bare_metal']['service_name']
@@ -51,6 +51,7 @@ connection_params = {
   openstack_api_key:      admin_pass,
   openstack_project_name: admin_project,
   openstack_domain_name:  admin_domain,
+  openstack_endpoint_type: endpoint_type,
 }
 
 # Register Bare Metal Service
