@@ -34,13 +34,6 @@ platform_options['ironic_api_packages'].each do |pkg|
   end
 end
 
-directory '/var/cache/ironic' do
-  owner node['openstack']['bare_metal']['user']
-  group node['openstack']['bare_metal']['group']
-  mode 00700
-  action :create
-end
-
 service 'ironic-api' do
   service_name platform_options['ironic_api_service']
   action [:disable, :stop]

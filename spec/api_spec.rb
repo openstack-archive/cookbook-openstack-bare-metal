@@ -36,14 +36,6 @@ describe 'openstack-bare-metal::api' do
       expect(chef_run).to upgrade_package('ironic-api')
     end
 
-    it 'should create the directory /var/cache/ironic' do
-      expect(chef_run).to create_directory('/var/cache/ironic').with(
-        user: 'ironic',
-        group: 'ironic',
-        mode: 00700
-      )
-    end
-
     it 'disables ironic api on boot' do
       expect(chef_run).to disable_service('ironic-api')
     end
