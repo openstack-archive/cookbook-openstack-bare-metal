@@ -70,8 +70,6 @@ default['openstack']['bare_metal']['region'] = node['openstack']['region']
 # Keystone settings
 default['openstack']['bare_metal']['api']['auth_strategy'] = 'keystone'
 
-default['openstack']['bare_metal']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
-
 # Whether to allow the client to perform insecure SSL (https) requests
 default['openstack']['bare_metal']['api']['auth']['insecure'] = false
 
