@@ -30,6 +30,9 @@ describe 'openstack-bare-metal::ironic-common' do
 
     it 'upgrades ironic common packages' do
       expect(chef_run).to upgrade_package('ironic-common')
+      expect(chef_run).to upgrade_package('python3-ironic')
+      expect(chef_run).to upgrade_package('python3-ironic-lib')
+      expect(chef_run).to upgrade_package('python3-ironicclient')
     end
 
     describe '/etc/ironic' do

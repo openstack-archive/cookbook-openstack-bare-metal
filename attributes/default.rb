@@ -116,7 +116,7 @@ when 'debian'
     'ironic_api_service' => 'ironic-api',
     'ironic_conductor_packages' => ['ironic-conductor', 'ipmitool'],
     'ironic_conductor_service' => 'ironic-conductor',
-    'ironic_common_packages' => ['python-ironicclient', 'ironic-common'],
+    'ironic_common_packages' => ['python3-ironic', 'python3-ironic-lib', 'python3-ironicclient', 'ironic-common'],
   }
 end
 

@@ -58,7 +58,7 @@ describe 'openstack-bare-metal::conductor' do
       end
 
       it 'subscribes to the common packages' do
-        expect(service).to subscribe_to('package[python-ironicclient]').delayed
+        expect(service).to subscribe_to('package[python3-ironicclient]').delayed
       end
     end
   end
