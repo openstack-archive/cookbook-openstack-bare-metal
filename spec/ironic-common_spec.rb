@@ -24,7 +24,7 @@ describe 'openstack-bare-metal::ironic-common' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'bare-metal-stubs'
 
@@ -65,19 +65,23 @@ describe 'openstack-bare-metal::ironic-common' do
       end
 
       context 'template contents' do
+        cached(:chef_run) do
+          node.override['openstack']['bare_metal']['syslog']['use'] = true
+          runner.converge(described_recipe)
+        end
+        before do
+          allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
+            .and_return('sql_connection_value')
+        end
+
         context 'syslog use' do
           it 'sets the log_config value when syslog is in use' do
-            node.override['openstack']['bare_metal']['syslog']['use'] = true
-
             expect(chef_run).to render_file(file.name)
               .with_content(%r{^log_config = /etc/openstack/logging.conf$})
           end
         end
 
         it 'has a db connection attribute' do
-          allow_any_instance_of(Chef::Recipe).to receive(:db_uri)
-            .and_return('sql_connection_value')
-
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('database', /^connection = sql_connection_value$/)
         end
