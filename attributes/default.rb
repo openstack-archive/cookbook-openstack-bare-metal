@@ -104,7 +104,7 @@ default['openstack']['bare_metal']['ssl']['ciphers'] = ''
 case node['platform_family']
 when 'fedora', 'rhel'
   default['openstack']['bare_metal']['platform'] = {
-    'ironic_api_packages' => ['openstack-ironic-api'],
+    'ironic_api_packages' => ['openstack-ironic-api', 'mod_wsgi'],
     'ironic_api_service' => 'openstack-ironic-api',
     'ironic_conductor_packages' => ['openstack-ironic-conductor', 'ipmitool'],
     'ironic_conductor_service' => 'openstack-ironic-conductor',

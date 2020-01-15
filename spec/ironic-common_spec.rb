@@ -64,6 +64,39 @@ describe 'openstack-bare-metal::ironic-common' do
         )
       end
 
+      [
+        /^auth_strategy = keystone$/,
+        /^control_exchange = ironic$/,
+        /^glance_api_version = 2$/,
+        %r{^state_path = /var/lib/ironic$},
+        %r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$},
+      ].each do |line|
+        it do
+          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
+        end
+      end
+      [
+        /^auth_type = password$/,
+        /^region_name = RegionOne$/,
+        /^username = ironic$/,
+        /^project_name = service$/,
+        /^user_domain_name = Default$/,
+        /^project_domain_name = Default$/,
+        %r{^auth_url = http://127.0.0.1:5000/v3$},
+        /^password = ironic_pass$/,
+      ].each do |line|
+        it do
+          expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', line)
+        end
+      end
+      [
+        %r{^lock_path = /var/lib/cinder/tmp$},
+      ].each do |line|
+        it do
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', line)
+        end
+      end
+
       context 'template contents' do
         cached(:chef_run) do
           node.override['openstack']['bare_metal']['syslog']['use'] = true

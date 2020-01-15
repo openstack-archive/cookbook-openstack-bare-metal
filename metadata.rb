@@ -18,6 +18,7 @@ recipe 'openstack-bare-metal::ironic-common', 'Defines the common pieces of repe
   supports os
 end
 
+depends 'apache2', '~> 8.0'
 depends 'openstack-common', '>= 18.0.0'
 depends 'openstack-identity', '>= 18.0.0'
 depends 'openstack-image', '>= 18.0.0'

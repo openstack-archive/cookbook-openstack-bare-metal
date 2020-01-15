@@ -57,6 +57,16 @@ if node['openstack']['mq']['service_type'] == 'rabbit'
   node.default['openstack']['bare_metal']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'bare_metal'
 end
 
+identity_endpoint = internal_endpoint 'identity'
+node.default['openstack']['bare_metal']['conf_secrets']
+  .[]('keystone_authtoken')['password'] =
+  get_password 'service', 'openstack-bare-metal'
+auth_url = ::URI.decode identity_endpoint.to_s
+
+node.default['openstack']['bare_metal']['conf'].tap do |conf|
+  conf['keystone_authtoken']['auth_url'] = auth_url
+end
+
 # merge all config options and secrets to be used in ironic.conf
 ironic_conf_options = merge_config_options 'bare_metal'
 

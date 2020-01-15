@@ -20,6 +20,7 @@
 
 class ::Chef::Recipe
   include ::Openstack
+  include Apache2::Cookbook::Helpers
 end
 
 include_recipe 'openstack-bare-metal::ironic-common'
@@ -29,8 +30,6 @@ platform_options = node['openstack']['bare_metal']['platform']
 platform_options['ironic_api_packages'].each do |pkg|
   package pkg do
     action :upgrade
-
-    notifies :restart, 'service[ironic-api]', :delayed
   end
 end
 
@@ -43,32 +42,56 @@ execute 'ironic db sync' do
   command 'ironic-dbsync --config-file /etc/ironic/ironic.conf upgrade'
   user 'root'
   group 'root'
-  action :run
 end
 
 # remove the ironic-wsgi.conf automatically generated from package
-apache_config 'ironic-wsgi' do
-  enable false
+apache2_conf 'ironic-wsgi' do
+  action :disable
 end
 
 bind_service = node['openstack']['bind_service']['all']['bare_metal']
 
-web_app 'ironic-api' do
-  template 'wsgi-template.conf.erb'
-  daemon_process 'ironic-wsgi'
-  server_host bind_service['host']
-  server_port bind_service['port']
-  server_entry '/usr/bin/ironic-api-wsgi'
-  log_dir node['apache']['log_dir']
-  run_dir node['apache']['run_dir']
-  user node['openstack']['bare_metal']['user']
-  group node['openstack']['bare_metal']['group']
-  use_ssl node['openstack']['bare_metal']['ssl']['enabled']
-  cert_file node['openstack']['bare_metal']['ssl']['certfile']
-  chain_file node['openstack']['bare_metal']['ssl']['chainfile']
-  key_file node['openstack']['bare_metal']['ssl']['keyfile']
-  ca_certs_path node['openstack']['bare_metal']['ssl']['ca_certs_path']
-  cert_required node['openstack']['bare_metal']['ssl']['cert_required']
-  protocol node['openstack']['bare_metal']['ssl']['protocol']
-  ciphers node['openstack']['bare_metal']['ssl']['ciphers']
+# Finds and appends the listen port to the apache2_install[openstack]
+# resource which is defined in openstack-identity::server-apache.
+apache_resource = find_resource(:apache2_install, 'openstack')
+
+if apache_resource
+  apache_resource.listen = [apache_resource.listen, "#{bind_service['host']}:#{bind_service['port']}"].flatten
+else
+  apache2_install 'openstack' do
+    listen "#{bind_service['host']}:#{bind_service['port']}"
+  end
+end
+
+# service['apache2'] is defined in the apache2_default_install resource
+# but other resources are currently unable to reference it.  To work
+# around this issue, define the following helper in your cookbook:
+service 'apache2' do
+  extend Apache2::Cookbook::Helpers
+  service_name lazy { apache_platform_service_name }
+  supports restart: true, status: true, reload: true
+  action :nothing
+end
+
+apache2_module 'wsgi'
+apache2_module 'ssl' if node['openstack']['bare_metal']['ssl']['enabled']
+
+template "#{apache_dir}/sites-available/ironic-api.conf" do
+  extend Apache2::Cookbook::Helpers
+  source 'wsgi-template.conf.erb'
+  variables(
+    daemon_process: 'ironic-wsgi',
+    server_host: bind_service['host'],
+    server_port: bind_service['port'],
+    server_entry: '/usr/bin/ironic-api-wsgi',
+    log_dir: default_log_dir,
+    run_dir: lock_dir,
+    user: node['openstack']['bare_metal']['user'],
+    group: node['openstack']['bare_metal']['group']
+  )
+  notifies :restart, 'service[apache2]'
+end
+
+apache2_site 'ironic-api' do
+  notifies :restart, 'service[apache2]', :immediately
 end
