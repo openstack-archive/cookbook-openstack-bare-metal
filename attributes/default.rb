@@ -1,9 +1,10 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-bare-metal
+# Cookbook:: openstack-bare-metal
 # Attributes:: default
 #
-# Copyright 2015, IBM, Corp
+# Copyright:: 2015, IBM, Corp
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -104,19 +105,25 @@ default['openstack']['bare_metal']['ssl']['ciphers'] = ''
 case node['platform_family']
 when 'fedora', 'rhel'
   default['openstack']['bare_metal']['platform'] = {
-    'ironic_api_packages' => ['openstack-ironic-api', 'mod_wsgi'],
+    'ironic_api_packages' => %w(openstack-ironic-api mod_wsgi),
     'ironic_api_service' => 'openstack-ironic-api',
-    'ironic_conductor_packages' => ['openstack-ironic-conductor', 'ipmitool'],
+    'ironic_conductor_packages' => %w(openstack-ironic-conductor ipmitool),
     'ironic_conductor_service' => 'openstack-ironic-conductor',
-    'ironic_common_packages' => ['openstack-ironic-common', 'python-ironicclient'],
+    'ironic_common_packages' => %w(openstack-ironic-common python-ironicclient),
   }
 when 'debian'
   default['openstack']['bare_metal']['platform'] = {
     'ironic_api_packages' => ['ironic-api'],
     'ironic_api_service' => 'ironic-api',
-    'ironic_conductor_packages' => ['ironic-conductor', 'ipmitool'],
+    'ironic_conductor_packages' => %w(ironic-conductor ipmitool),
     'ironic_conductor_service' => 'ironic-conductor',
-    'ironic_common_packages' => ['python3-ironic', 'python3-ironic-lib', 'python3-ironicclient', 'ironic-common'],
+    'ironic_common_packages' =>
+      %w(
+        python3-ironic
+        python3-ironic-lib
+        python3-ironicclient
+        ironic-common
+      ),
   }
 end
 

@@ -1,9 +1,10 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: openstack-bare-metal
+# Cookbook:: openstack-bare-metal
 # Recipe:: ironic-common
 #
-# Copyright 2015, IBM Corp.
+# Copyright:: 2015, IBM Corp.
+# Copyright:: 2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,17 +29,13 @@ end
 
 platform_options = node['openstack']['bare_metal']['platform']
 
-platform_options['ironic_common_packages'].each do |pkg|
-  package pkg do
-    action :upgrade
-  end
+package platform_options['ironic_common_packages'] do
+  action :upgrade
 end
 
 db_type = node['openstack']['db']['bare_metal']['service_type']
-node['openstack']['db']['python_packages'][db_type].each do |pkg|
-  package pkg do
-    action :upgrade
-  end
+package node['openstack']['db']['python_packages'][db_type] do
+  action :upgrade
 end
 
 db_user = node['openstack']['db']['bare_metal']['username']
@@ -54,7 +51,8 @@ if node['openstack']['endpoints']['db']['enabled_slave']
 end
 
 if node['openstack']['mq']['service_type'] == 'rabbit'
-  node.default['openstack']['bare_metal']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'bare_metal'
+  node.default['openstack']['bare_metal']['conf_secrets']['DEFAULT']['transport_url'] =
+    rabbit_transport_url 'bare_metal'
 end
 
 identity_endpoint = internal_endpoint 'identity'
@@ -73,15 +71,15 @@ ironic_conf_options = merge_config_options 'bare_metal'
 directory '/etc/ironic' do
   owner node['openstack']['bare_metal']['user']
   group node['openstack']['bare_metal']['group']
-  mode 00750
-  action :create
+  mode '750'
 end
 
 template '/etc/ironic/ironic.conf' do
   source 'ironic.conf.erb'
   owner node['openstack']['bare_metal']['user']
   group node['openstack']['bare_metal']['group']
-  mode 00640
+  sensitive true
+  mode '640'
   variables(
     service_config: ironic_conf_options
   )
@@ -101,7 +99,7 @@ if node['openstack']['bare_metal']['use_rootwrap']
     cookbook 'openstack-common'
     owner 'root'
     group 'root'
-    mode 0o0644
+    mode '644'
     variables(
       service_config: node['openstack']['bare_metal']['rootwrap']['conf']
     )

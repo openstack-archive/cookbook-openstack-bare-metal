@@ -109,7 +109,7 @@ shared_examples 'expects to create ironic directories' do
     expect(chef_run).to create_directory('/etc/ironic').with(
       owner: 'ironic',
       group: 'ironic',
-      mode: 0o750
+      mode: '750'
     )
   end
 end
@@ -122,7 +122,7 @@ shared_examples 'expects to create ironic conf' do
       expect(chef_run).to create_template(file.name).with(
         owner: 'ironic',
         group: 'ironic',
-        mode: 0o640
+        mode: '640'
       )
     end
 

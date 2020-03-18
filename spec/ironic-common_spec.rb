@@ -1,9 +1,9 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: openstack-bare-metal
+# Cookbook:: openstack-bare-metal
 # Spec:: ironic_common_spec
 #
-# Copyright 2015, IBM Corp.
+# Copyright:: 2015, IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,11 +28,8 @@ describe 'openstack-bare-metal::ironic-common' do
 
     include_context 'bare-metal-stubs'
 
-    it 'upgrades ironic common packages' do
-      expect(chef_run).to upgrade_package('ironic-common')
-      expect(chef_run).to upgrade_package('python3-ironic')
-      expect(chef_run).to upgrade_package('python3-ironic-lib')
-      expect(chef_run).to upgrade_package('python3-ironicclient')
+    it do
+      expect(chef_run).to upgrade_package %w(python3-ironic python3-ironic-lib python3-ironicclient ironic-common)
     end
 
     describe '/etc/ironic' do
@@ -42,7 +39,7 @@ describe 'openstack-bare-metal::ironic-common' do
         expect(chef_run).to create_directory(dir.name).with(
           user: 'ironic',
           group: 'ironic',
-          mode: 0o0750
+          mode: '750'
         )
       end
     end
@@ -58,41 +55,43 @@ describe 'openstack-bare-metal::ironic-common' do
 
       it 'should create the ironic.conf template' do
         expect(chef_run).to create_template(file.name).with(
+          source: 'ironic.conf.erb',
           user: 'ironic',
           group: 'ironic',
-          mode: 0o0640
+          mode: '640',
+          sensitive: true
         )
       end
 
-      [
-        /^auth_strategy = keystone$/,
-        /^control_exchange = ironic$/,
-        /^glance_api_version = 2$/,
-        %r{^state_path = /var/lib/ironic$},
-        %r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$},
-      ].each do |line|
-        it do
+      it '[DEFAULT]' do
+        [
+          /^auth_strategy = keystone$/,
+          /^control_exchange = ironic$/,
+          /^glance_api_version = 2$/,
+          %r{^state_path = /var/lib/ironic$},
+          %r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$},
+        ].each do |line|
           expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
         end
       end
-      [
-        /^auth_type = password$/,
-        /^region_name = RegionOne$/,
-        /^username = ironic$/,
-        /^project_name = service$/,
-        /^user_domain_name = Default$/,
-        /^project_domain_name = Default$/,
-        %r{^auth_url = http://127.0.0.1:5000/v3$},
-        /^password = ironic_pass$/,
-      ].each do |line|
-        it do
+      it '[keystone_authtoken]' do
+        [
+          /^auth_type = password$/,
+          /^region_name = RegionOne$/,
+          /^username = ironic$/,
+          /^project_name = service$/,
+          /^user_domain_name = Default$/,
+          /^project_domain_name = Default$/,
+          %r{^auth_url = http://127.0.0.1:5000/v3$},
+          /^password = ironic_pass$/,
+        ].each do |line|
           expect(chef_run).to render_config_file(file.name).with_section_content('keystone_authtoken', line)
         end
       end
-      [
-        %r{^lock_path = /var/lib/cinder/tmp$},
-      ].each do |line|
-        it do
+      it '[oslo_concurrency]' do
+        [
+          %r{^lock_path = /var/lib/cinder/tmp$},
+        ].each do |line|
           expect(chef_run).to render_config_file(file.name).with_section_content('oslo_concurrency', line)
         end
       end
@@ -128,7 +127,7 @@ describe 'openstack-bare-metal::ironic-common' do
         expect(chef_run).to create_template(file.name).with(
           user: 'root',
           group: 'root',
-          mode: 0o644
+          mode: '644'
         )
       end
 
@@ -141,7 +140,7 @@ describe 'openstack-bare-metal::ironic-common' do
             /^syslog_log_facility = syslog$/,
             /^syslog_log_level = ERROR$/,
           ].each do |line|
-            expect(chef_run).to render_config_file(file.name).with_content(line)
+            expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
           end
         end
       end

@@ -11,8 +11,7 @@ describe 'openstack-bare-metal::api' do
     include_context 'bare-metal-stubs'
 
     it do
-      expect(chef_run).to upgrade_package('openstack-ironic-api')
-      expect(chef_run).to upgrade_package('mod_wsgi')
+      expect(chef_run).to upgrade_package %w(openstack-ironic-api mod_wsgi)
     end
 
     it do

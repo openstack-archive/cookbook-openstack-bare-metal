@@ -1,9 +1,9 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: openstack-bare-metal
+# Cookbook:: openstack-bare-metal
 # Spec:: conductor_spec
 #
-# Copyright 2015, IBM Corp.
+# Copyright:: 2015, IBM Corp.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,14 +32,12 @@ describe 'openstack-bare-metal::conductor' do
       expect(chef_run).to include_recipe('openstack-bare-metal::ironic-common')
     end
 
-    it 'upgrades ironic conductor packages' do
-      %w(ironic-conductor ipmitool).each do |pkg|
-        expect(chef_run).to upgrade_package(pkg)
-      end
+    it do
+      expect(chef_run).to upgrade_package %w(ironic-conductor ipmitool)
     end
 
     describe 'ironic-conductor packages' do
-      let(:package) { chef_run.package('ironic-conductor') }
+      let(:package) { chef_run.package(%w(ironic-conductor ipmitool)) }
 
       it 'sends a notification to the service' do
         expect(package).to notify('service[ironic-conductor]').to(:restart).delayed
@@ -55,10 +53,6 @@ describe 'openstack-bare-metal::conductor' do
 
       it 'subscribes to the template creation' do
         expect(service).to subscribe_to('template[/etc/ironic/ironic.conf]')
-      end
-
-      it 'subscribes to the common packages' do
-        expect(service).to subscribe_to('package[python3-ironicclient]').delayed
       end
     end
   end

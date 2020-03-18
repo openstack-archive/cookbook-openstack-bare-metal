@@ -1,9 +1,10 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-bare-metal
+# Cookbook:: openstack-bare-metal
 # Recipe:: identity_registration
 #
-# Copyright 2015, IBM, Inc.
+# Copyright:: 2015, IBM, Inc.
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,11 +49,11 @@ service_name = node['openstack']['bare_metal']['service_name']
 service_type = node['openstack']['bare_metal']['service_type']
 
 connection_params = {
-  openstack_auth_url:     auth_url,
-  openstack_username:     admin_user,
-  openstack_api_key:      admin_pass,
+  openstack_auth_url: auth_url,
+  openstack_username: admin_user,
+  openstack_api_key: admin_pass,
   openstack_project_name: admin_project,
-  openstack_domain_name:  admin_domain,
+  openstack_domain_name: admin_domain,
   # openstack_endpoint_type: endpoint_type,
 }
 

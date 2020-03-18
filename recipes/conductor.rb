@@ -1,9 +1,10 @@
 # Encoding: utf-8
 #
-# Cookbook Name:: openstack-bare-metal
+# Cookbook:: openstack-bare-metal
 # Recipe:: conductor
 #
-# Copyright 2015, IBM Corp.
+# Copyright:: 2015, IBM Corp.
+# Copyright:: 2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,12 +27,9 @@ include_recipe 'openstack-bare-metal::ironic-common'
 
 platform_options = node['openstack']['bare_metal']['platform']
 
-platform_options['ironic_conductor_packages'].each do |pkg|
-  package pkg do
-    action :upgrade
-
-    notifies :restart, 'service[ironic-conductor]', :delayed
-  end
+package platform_options['ironic_conductor_packages'] do
+  action :upgrade
+  notifies :restart, 'service[ironic-conductor]', :delayed
 end
 
 service 'ironic-conductor' do
@@ -39,7 +37,4 @@ service 'ironic-conductor' do
   supports status: true, restart: true
   action [:enable, :start]
   subscribes :restart, 'template[/etc/ironic/ironic.conf]'
-  platform_options['ironic_common_packages'].each do |pkg|
-    subscribes :restart, "package[#{pkg}]", :delayed
-  end
 end
