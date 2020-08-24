@@ -59,7 +59,7 @@ identity_endpoint = internal_endpoint 'identity'
 node.default['openstack']['bare_metal']['conf_secrets']
   .[]('keystone_authtoken')['password'] =
   get_password 'service', 'openstack-bare-metal'
-auth_url = ::URI.decode identity_endpoint.to_s
+auth_url = identity_endpoint.to_s
 
 node.default['openstack']['bare_metal']['conf'].tap do |conf|
   conf['keystone_authtoken']['auth_url'] = auth_url
