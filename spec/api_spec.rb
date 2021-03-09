@@ -1,4 +1,3 @@
-# Encoding: utf-8
 #
 # Cookbook:: openstack-bare-metal
 # Spec:: api_spec
@@ -64,7 +63,7 @@ describe 'openstack-bare-metal::api' do
           daemon_process: 'ironic-wsgi',
           group: 'ironic',
           log_dir: '/var/log/apache2',
-          run_dir: '/var/lock/apache2',
+          run_dir: '/var/lock',
           server_entry: '/usr/bin/ironic-api-wsgi',
           server_host: '127.0.0.1',
           server_port: '6385',
@@ -80,7 +79,7 @@ describe 'openstack-bare-metal::api' do
       /WSGIApplicationGroup %{GLOBAL}$/,
       %r{ErrorLog /var/log/apache2/ironic-wsgi_error.log$},
       %r{CustomLog /var/log/apache2/ironic-wsgi_access.log combined$},
-      %r{WSGISocketPrefix /var/lock/apache2$},
+      %r{WSGISocketPrefix /var/lock$},
     ].each do |line|
       it do
         expect(chef_run).to render_file('/etc/apache2/sites-available/ironic-api.conf').with_content(line)

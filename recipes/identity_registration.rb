@@ -1,4 +1,3 @@
-# encoding: UTF-8
 #
 # Cookbook:: openstack-bare-metal
 # Recipe:: identity_registration

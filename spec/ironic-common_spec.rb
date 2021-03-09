@@ -1,4 +1,3 @@
-# Encoding: utf-8
 #
 # Cookbook:: openstack-bare-metal
 # Spec:: ironic_common_spec
