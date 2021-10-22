@@ -12,7 +12,7 @@ chef_version      '>= 16.0'
   supports os
 end
 
-depends 'apache2', '~> 8.1'
+depends 'apache2', '~> 8.6'
 depends 'openstack-common', '>= 20.0.0'
 depends 'openstack-identity', '>= 20.0.0'
 depends 'openstack-image', '>= 20.0.0'

@@ -71,7 +71,7 @@ service 'apache2' do
   action :nothing
 end
 
-apache2_module 'wsgi'
+apache2_mod_wsgi 'bare-metal'
 apache2_module 'ssl' if node['openstack']['bare_metal']['ssl']['enabled']
 
 template "#{apache_dir}/sites-available/ironic-api.conf" do

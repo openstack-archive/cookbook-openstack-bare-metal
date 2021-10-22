@@ -104,11 +104,11 @@ default['openstack']['bare_metal']['ssl']['ciphers'] = ''
 case node['platform_family']
 when 'fedora', 'rhel'
   default['openstack']['bare_metal']['platform'] = {
-    'ironic_api_packages' => %w(openstack-ironic-api mod_wsgi),
+    'ironic_api_packages' => %w(openstack-ironic-api),
     'ironic_api_service' => 'openstack-ironic-api',
     'ironic_conductor_packages' => %w(openstack-ironic-conductor ipmitool),
     'ironic_conductor_service' => 'openstack-ironic-conductor',
-    'ironic_common_packages' => %w(openstack-ironic-common python-ironicclient),
+    'ironic_common_packages' => node['platform_version'].to_i >= 8 ? %w(openstack-ironic-common python3-ironicclient) : %w(openstack-ironic-common python-ironicclient),
   }
 when 'debian'
   default['openstack']['bare_metal']['platform'] = {
